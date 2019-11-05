@@ -17,4 +17,7 @@ peer_c.set_server_port(peer_1['server_port'])
 peer_c.set_client_port(peer_1['client_port'])
 peer_c.set_share_dir(peer_1['share_dir'])
 peer_c.set_peer_list(peer_1['peer_list'])
-peer_c.tcp_client()
+peer_attr = peer_c.update_peer_attr()
+for i in peer_attr:
+	peer_c.tcp_client_query(i['ip_addr'], i['server_port'], "get 1.txt %s" % peer_1['server_port'])
+

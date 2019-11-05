@@ -26,8 +26,9 @@ class Config:
         peer_str = self.__cf.get("Peer-%s" % i, "peer_list")
         peer_str = peer_str[1:len(peer_str) - 1]
         peer_list = peer_str.split(', ')
-        for i in range(len(peer_list)):
-            peer_list[i] = int(peer_list[i])
+        if not peer_list:
+            for i in range(len(peer_list)):
+                peer_list[i] = int(peer_list[i])
         peer['peer_list'] = peer_list
         return peer
 

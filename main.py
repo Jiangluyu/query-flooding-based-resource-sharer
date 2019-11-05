@@ -12,9 +12,17 @@ import connection
 
 
 if __name__ == '__main__':
-    thread1 = thread.MYTHREAD(1, "THREAD1", 1)
+    thread0 = thread.TcpServer(0, "THREAD0", 0)
+    thread0.start()
+
+    thread1 = thread.TcpServer(2, "THREAD2", 2)
     thread1.start()
 
+    thread2 = thread.TcpServer(3, "THREAD3", 3)
+    thread2.start()
 
-    print("exit main thread")
+    thread3 = thread.TcpServer(4, "THREAD4", 4)
+    thread3.start()
+
+
 
