@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-__title__ = ""
+__title__ = "config.py"
 __author__ = "louis"
 __mtime__ = "2019/11/5"
 """
@@ -18,18 +18,23 @@ class Config:
         :param i: represent the sequence number of peer e.g. [peer-i]
         :return: dict {'ip_addr': ip, 'port': port, 'share_dir': share_dir, 'peer_list': peer_list}
         """
-        peer = dict()
-        peer['ip_addr'] = self.__cf.get("Peer-%s" % i, "ip_addr")
-        peer['server_port'] = self.__cf.get("Peer-%s" % i, "server_port")
-        peer['client_port'] = self.__cf.get("Peer-%s" % i, "client_port")
-        peer['share_dir'] = self.__cf.get("Peer-%s" % i, "share_dir")
-        peer_str = self.__cf.get("Peer-%s" % i, "peer_list")
-        peer_str = peer_str[1:len(peer_str) - 1]
-        peer_list = peer_str.split(', ')
-        if not peer_list:
-            for i in range(len(peer_list)):
-                peer_list[i] = int(peer_list[i])
-        peer['peer_list'] = peer_list
+        while True:
+            try:
+                peer = dict()
+                peer['ip_addr'] = self.__cf.get("Peer-%s" % i, "ip_addr")
+                peer['server_port'] = self.__cf.get("Peer-%s" % i, "server_port")
+                peer['client_port'] = self.__cf.get("Peer-%s" % i, "client_port")
+                peer['share_dir'] = self.__cf.get("Peer-%s" % i, "share_dir")
+                peer_str = self.__cf.get("Peer-%s" % i, "peer_list")
+                peer_str = peer_str[1:len(peer_str) - 1]
+                peer_list = peer_str.split(', ')
+                if not peer_list:
+                    for i in range(len(peer_list)):
+                        peer_list[i] = int(peer_list[i])
+                peer['peer_list'] = peer_list
+                break
+            except:
+                pass
         return peer
 
     def set_attr(self, i, attr_dict):
@@ -61,6 +66,11 @@ class Config:
         return "Modify success"
 
     def __modify(self, i, attr_dict):
+        """
+        :param i:
+        :param attr_dict:
+        :return:
+        """
         data = ""
         flag = 0
         attr_dict["peer_list"] = str(attr_dict["peer_list"])
