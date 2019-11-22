@@ -7,6 +7,7 @@ __mtime__ = "2019/11/5"
 """
 import configparser
 import ipaddress
+import os
 
 
 class Config:
@@ -31,6 +32,8 @@ class Config:
                 if not peer_list:
                     for i in range(len(peer_list)):
                         peer_list[i] = int(peer_list[i])
+                else:
+                    peer_list = [int(i) for i in peer_list]
                 peer['peer_list'] = peer_list
                 break
             except:
@@ -45,6 +48,7 @@ class Config:
         """
         self.__init__()
         origin_attr = self.get_attr(i)
+        print(origin_attr)
         diff_val = [(k, origin_attr[k], attr_dict[k]) for k in origin_attr if origin_attr[k] != attr_dict[k]]
         # e.g.[('diff_key', original_attr[diff_key], attr_dict[diff_key])]
         if not diff_val:
@@ -61,11 +65,17 @@ class Config:
             if t[0] == 'ip_addr':
                 if not ipaddress.ip_address(t[2]):
                     return "Invalid ip_addr"
-
-        self.__modify(i, attr_dict)
+            elif t[0] == 'share_dir':
+                if not os.path.isdir(t[2]):
+                    return "Invalid share_dir"
+                if t[2][-1] != os.sep:
+                    t[2] += os.sep
+        print(diff_val)
+        self.modify(i, attr_dict)
         return "Modify success"
 
-    def __modify(self, i, attr_dict):
+    @staticmethod
+    def modify(i, attr_dict):
         """
         :param i:
         :param attr_dict:
@@ -99,9 +109,6 @@ class Config:
 
     def get_ttl(self):
         return self.__ttl
-
-    def set_ttl(self, ttl):
-        self.__ttl = ttl
 
     @staticmethod
     def get_peer_num():

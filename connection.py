@@ -26,8 +26,7 @@ class Connection:
 	__peer_num = 0
 	__query_res = dict()
 	__path_list = dict()
-	__timeout_flag = dict()
-
+	__request_flag = dict()
 	# 当前对等方所有邻居的信息
 	__peer_attr = []
 
@@ -59,7 +58,6 @@ class Connection:
 		items = os.listdir(root)
 		for item in items:
 			path = os.path.join(root, item)
-			print(path.split("/"))
 			if path.split('\\')[-1] == filename or path.split('/')[-1] == filename:
 				self.__query_res[filename] = 1
 				self.__path_list[filename] = path.replace('\\', '/')
@@ -67,7 +65,6 @@ class Connection:
 				self.query(path.replace('\\', '/'), filename)
 
 	def tcp_handler(self, conn, addr):
-		print("addr: ", addr)
 		while True:
 			try:
 				res = conn.recv(1024)
@@ -77,7 +74,6 @@ class Connection:
 				if not res:
 					continue
 				else:
-					print(res.decode())
 					self.__cmd = res.decode('utf-8').split()
 
 					if self.__cmd[0] == 'get':
@@ -93,21 +89,21 @@ class Connection:
 							if int(self.__cmd[-1]) >= 0:
 								print("%s: self failed, Querying neighbors" % self.__num)
 								for i in self.__peer_attr:
-									print("%s: querying neighbor %d" % (self.__num, int(i['server_port']) - 800))
-									self.tcp_client_notice(i['ip_addr'], i['server_port'], res)
-
+									if i['server_port'] == self.__cmd[2]:
+										continue
+									else:
+										print("%s: querying neighbor" % self.__num)
+										self.tcp_client_notice(i['ip_addr'], i['server_port'], res)
 							else:
 								print("over ttl")
 
 						# 本地找到，向请求源server发送成功消息
 						else:
-							msg = "found %s at %s %s %s" % (
-								self.__cmd[1], self.__num, self.__ip_addr, self.__server_port)
+							msg = "found %s at %s %s %s" % (self.__cmd[1], self.__num, self.__ip_addr, self.__server_port)
 							self.tcp_client_notice(self.__source_ip, self.__source_port, msg)
 
 					# 收到“found filename at x [ip] [port]”消息，即向x的server发送请求
 					elif self.__cmd[0] == 'found':
-						self.__timeout_flag[self.__cmd[1]] = 0
 						self.__source_ip = self.__cmd[4]
 						self.__source_port = self.__cmd[5]
 						msg = 'request %s %s %s' % (self.__cmd[1], self.__ip_addr, self.__server_port)
@@ -115,6 +111,7 @@ class Connection:
 
 					# 收到“request filename [ip] [port]”消息，即向请求源发送文件
 					elif self.__cmd[0] == 'request':
+						self.__request_flag[self.__cmd[1]] = 1
 						self.__send(conn, self.__cmd[1])
 
 					# 过滤其它命令
@@ -122,8 +119,8 @@ class Connection:
 						msg = "invalid content"
 						conn.send(msg.encode())
 
-					break
 			except ConnectionResetError:
+				print("connect abort")
 				break
 		conn.close()
 
@@ -136,6 +133,7 @@ class Connection:
 			try:
 				conn, addr = tcp_server.accept()
 			except ConnectionAbortedError:
+				print("server except")
 				continue
 			t = threading.Thread(target=self.tcp_handler, args=(conn, addr))
 			t.start()
@@ -175,9 +173,12 @@ class Connection:
 			for b in f:
 				conn.send(b)
 				send_size += len(b)
-				print(send_size)
-
-		os.remove(filename)
+		while True:
+			try:
+				os.remove(filename)
+				break
+			except:
+				continue
 
 	def __save(self, conn):
 		obj = conn.recv(4)
@@ -189,7 +190,6 @@ class Connection:
 		# 解包头
 		header_json = header_bytes.decode('utf-8')
 		header_dic = json.loads(header_json)
-		print(header_dic)
 		total_size = header_dic['file_size']
 		filename = header_dic['filename']
 		cur_md5 = header_dic['md5']
@@ -204,33 +204,33 @@ class Connection:
 			print("total size: %s, already downloaded: %s" % (total_size, recv_size))
 		if filemd5.compare_file_md5('%s%s' % (self.__share_dir, filename), cur_md5) == 1:
 			z = zipfile.ZipFile("%s%s" % (self.__share_dir, filename), 'r')
-			print(z)
 			z.extractall("%s" % self.__share_dir)
 			z.close()
 		else:
 			print("file corrupt during transmission")
-		os.remove("%s%s" % (self.__share_dir, filename))
+		while True:
+			try:
+				os.remove("%s%s" % (self.__share_dir, filename))
+				break
+			except:
+				continue
 
 	def tcp_client_notice(self, ip, port, msg):
 		tcp_client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		tcp_client.connect((ip, int(port)))
-		print(tcp_client)
 		tcp_client.send(msg.encode())
 		if msg.split()[0] == 'request':
 			self.__save(tcp_client)
-		if msg.split()[0] == 'get':
-			self.__timeout_flag[msg.split()[1]] = 1
 		tcp_client.shutdown(2)
 		tcp_client.close()
 
 	def update_peer_attr(self):
 		conf = config.Config()
+		l1 = []
 		for i in self.__peer_list:
-			if not i:
-				break
-			else:
-				self.__peer_attr = [conf.get_attr(i)]
-				self.__peer_num += 1
+			l1.append(conf.get_attr(i))
+			self.__peer_num += 1
+		self.__peer_attr = l1
 		return self.__peer_attr
 
 	def update_ttl(self, msg):
@@ -241,3 +241,12 @@ class Connection:
 
 	def get_timeout_flag(self):
 		return self.__timeout_flag
+
+	def get_peer_num(self):
+		return self.__peer_num
+
+	def get_peer_list(self):
+		return self.__peer_list
+
+	def get_num(self):
+		return self.__num

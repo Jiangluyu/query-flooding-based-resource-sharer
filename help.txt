@@ -1,0 +1,6 @@
+     [opt]                                                       [specification]
+get [filename]......................................download file if exist in neighbour node
+config..............................................show the config of the peer you play role of
+modify [category] [new_attr]........................category includes: ip, serverport, clientport, sharedir, peerlist(split by '/')
+help................................................show the instructions
+exit................................................exit the system
