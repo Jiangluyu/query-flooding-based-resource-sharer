@@ -232,6 +232,7 @@
       <workItem from="1574154803780" duration="1035000" />
       <workItem from="1574223396459" duration="1225000" />
       <workItem from="1574417308183" duration="1090000" />
+      <workItem from="1574433635181" duration="1848000" />
     </task>
     <servers />
   </component>
@@ -244,6 +245,6 @@
     <SUITE FILE_PATH="coverage/nwclass$connection.coverage" NAME="connection Coverage Results" MODIFIED="1572965145076" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/nwclass$test.coverage" NAME="test Coverage Results" MODIFIED="1573892328044" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/nwclass$testc.coverage" NAME="testc Coverage Results" MODIFIED="1573897448787" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/nwclass$main.coverage" NAME="main Coverage Results" MODIFIED="1574418183535" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/nwclass$main.coverage" NAME="main Coverage Results" MODIFIED="1574433707286" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

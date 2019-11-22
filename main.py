@@ -13,8 +13,8 @@ import multiprocessing as mp
 
 
 if __name__ == '__main__':
+    multiprocessing.freeze_support()
     attr_num = 7
-
     print("flood-query-system v1.0 by louis")
     while True:
         print()
@@ -23,7 +23,6 @@ if __name__ == '__main__':
         opt = input(">input opt(input 'help' if not know):")
         print()
         if opt.split()[0] == 'get':
-            multiprocessing.freeze_support()
             peer_num = config.Config().get_peer_num()
             print('Parent process %s.' % os.getpid())
             p = mp.Pool(7)
