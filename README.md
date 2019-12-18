@@ -1,5 +1,5 @@
 # Query-flooding-based-Resource-Sharer
-Keep Private until 2020
+
 2019 年 11 月
 
 **1.项目简介**
