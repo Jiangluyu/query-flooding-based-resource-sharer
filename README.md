@@ -14,7 +14,7 @@
 
 > 操作系统： Windows 10 1903
 >
-> 处理器：Intel^®^ Core™ i7-8809G CPU @ 3.10GHz
+> 处理器：Intel® Core™ i7-8809G CPU @ 3.10GHz
 >
 > RAM: 16.0GB
 >
